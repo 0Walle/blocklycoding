@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Canvas Tutorial 5</title>
+  <script src="/blockly/blockly_compressed.js"></script>
+  <script src="/blockly/blocks_compressed.js"></script>
+  <script src="/blockly/javascript_compressed.js"></script>
+  <script src="/blockly/msg/js/pt-br.js"></script>
+  <script src="../blocks/canvasblocks.js"></script>
+  <!-- <script src="api/canvas.js"></script> -->
+  <script src="../blocks/canvas.js"></script>
+  <script src="../game/dialog.js"></script>
+  <script src="../game/sound.js"></script>
+  <script src="../blocks/canvascode.js"></script>
+  <script src="../blocks/acorn_interpreter.js"></script>
+  <link rel="stylesheet" type="text/css" href="../style/style.css">
+</head>
+<body>
+
+  <table id="playarea">
+    <tbody>
+      <tr>
+        <td id="canvasTd">
+          <canvas id="canvas" width="400" height="300"></canvas>
+          <button id="runButton" type="button" onclick="runCode()">Começa</button>
+        </td>
+        <td id="blocklyDiv">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <xml xmlns="http://www.w3.org/1999/xhtml" id="workspaceBlocks" style="display: none;">
+    <block type="repeat_times" x="100" y="100" editable="false">
+      <field name="times">20</field>
+    </block>
+  </xml>
+
+  <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+      <block type="foward"></block>
+      <block type="turn_right"></block>
+      <block type="turn_left"></block>
+      <!-- <block type="repeat_times"></block> -->
+      <block type="if_path">
+        <field name="dir">left</field>
+      </block>
+  </xml>
+
+  <div id="winDialog" style="display: none;">
+    <p>Parabéns!</p>
+    <p>Você aprendeu como usar os blocos do Blockly</p>
+    <p>Acabou por enquanto</p>
+    <button onclick="dialog.close()">Ok</button>
+  </div>
+
+  <div id="helpDialog1" style="display: none;">
+    <p>Coloque mais um bloco de "siga em frente" para o cubo pegar a fruta</p>
+  </div>
+
+
+  <script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    var Collect = new Sound("../game/collect.ogg");
+    var SColide = new Sound("../game/colide.ogg");
+
+    var dialog = new Dialog();
+
+    Blockly.HSV_SATURATION = 1.0; 
+    Blockly.HSV_VALUE = 0.75;
+
+    var blocklyArea = document.getElementById('blocklyArea');
+    var blocklyDiv = document.getElementById('blocklyDiv');
+    var workspace = Blockly.inject(blocklyDiv,
+        {media: '/blockly/media/',
+          toolbox: document.getElementById('toolbox'),
+          trashcan : true,
+          scrollbars : true,
+          zoom: {
+            controls: true,
+            startScale: 1.2,
+            maxScale: 2,
+            minScale: 0.6,
+            scaleSpeed: 1.2
+          }
+    });
+
+    var workspaceBlocks = document.getElementById("workspaceBlocks"); 
+    Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);
+
+    player.setpos(1,5)
+    grasses.push([0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[3,2],[3,1],[4,1],[5,1],[5,2],[5,3],[5,4],[2,4],[3,4],[4,4],[1,0],[1,1],[1,2],[1,3],[1,4],[7,0],[7,1],[7,2],[7,3],[7,4],[7,5]);
+
+    var Oapples = [[2,0],[3,0],[4,0],[5,0],[6,0],
+                   [2,1],                  [6,1],
+                   [2,2],      [4,2],      [6,2],
+                   [2,3],[3,3],[4,3],      [6,3],
+                                           [6,4],
+                   [2,5],[3,5],[4,5],[5,5],[6,5]];
+
+    var apples = Oapples.slice();
+
+    function drawScene(){
+      fillScreen("#2f2");
+      drawGrid();
+      drawApples();
+      player.draw();
+      drawGrasses();
+      player.drawPointer();
+    }
+    setInterval(drawScene, 33);
+  </script>
+  <script src="../blocks/interpreting.js"></script>
+</body>
+</html>
